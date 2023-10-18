@@ -87,6 +87,11 @@ button.loading{
     pointer-events: none;
 }
 
+button.copied{
+    opacity: 0.7;
+    pointer-events: none;
+}
+
 .quote-box{
     background: #fff;
     width: 700px;

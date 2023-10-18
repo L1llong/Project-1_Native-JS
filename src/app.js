@@ -19,6 +19,9 @@ function getQuote(url){
         author.innerHTML = data.author
         newQuoteBtn.innerHTML = "New Quote"
         newQuoteBtn.classList.remove('loading')
+
+        copyBtn.innerHTML = "Copy"
+        copyBtn.classList.remove('copied')
     })
     
 }
@@ -38,4 +41,6 @@ shareBtn.addEventListener('click', shareVk)
 const copyBtn = document.querySelector('.copy')
 copyBtn.addEventListener('click', () =>{
     navigator.clipboard.writeText(quote.innerHTML)
+    copyBtn.classList.add('copied')
+    copyBtn.innerHTML = 'Copied'
 })
