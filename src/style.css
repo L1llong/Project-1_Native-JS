@@ -92,6 +92,12 @@ button.copied{
     pointer-events: none;
 }
 
+button.unlike{
+    opacity: 0.7;
+    /* pointer-events: none; */
+    background-color: red;
+}
+
 .quote-box{
     background: #fff;
     width: 700px;

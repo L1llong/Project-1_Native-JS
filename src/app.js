@@ -5,6 +5,12 @@ const newQuoteBtn = document.querySelector('.newQuote')
 
 newQuoteBtn.addEventListener('click', () => {
     getQuote(api_url)    
+    copyBtn.innerHTML = "Copy"
+    copyBtn.classList.remove('copied')
+
+    likeBtn.innerHTML = 'Like'
+    likeBtn.classList.add('like')
+    likeBtn.classList.remove('unlike')
 })
 
 const api_url = "https://api.quotable.io/random"
@@ -14,18 +20,15 @@ function getQuote(url){
     newQuoteBtn.classList.add('loading')
     newQuoteBtn.innerHTML = "loading Quote..."
 
-    fetch(api_url).then((res) => res.json()).then(data => {
+    let keyId = 0;
+
+    fetch(url).then((res) => res.json()).then(data => {
         quote.innerHTML = data.content
         author.innerHTML = data.author
         newQuoteBtn.innerHTML = "New Quote"
         newQuoteBtn.classList.remove('loading')
-
-        copyBtn.innerHTML = "Copy"
-        copyBtn.classList.remove('copied')
     })
-    
 }
-
 getQuote(api_url)
 
 function shareVk(){
@@ -34,7 +37,6 @@ function shareVk(){
     'VK window', 'height=350,width=300')
 }
 
-
 const shareBtn = document.querySelector('.share')
 shareBtn.addEventListener('click', shareVk)
 
@@ -42,5 +44,36 @@ const copyBtn = document.querySelector('.copy')
 copyBtn.addEventListener('click', () =>{
     navigator.clipboard.writeText(quote.innerHTML)
     copyBtn.classList.add('copied')
+    copyBtn.classList.remove('copy')
     copyBtn.innerHTML = 'Copied'
 })
+
+const likeBtn = document.querySelector('.like');
+let quotesArray = JSON.parse(localStorage.getItem('favoriteQuotes')) || []
+let id = quotesArray.length
+likeBtn.addEventListener('click', () => {
+  if (likeBtn.classList.contains('like')) {
+    likeBtn.innerHTML = 'Unlike'
+    likeBtn.classList.add('unlike')
+    likeBtn.classList.remove('like')
+
+    const newQuote = {
+      id: id,
+      text: quote.innerHTML
+    }
+
+    quotesArray.push(newQuote)
+    id++
+    localStorage.setItem('favoriteQuotes', JSON.stringify(quotesArray))
+  } else {
+    likeBtn.innerHTML = 'Like'
+    likeBtn.classList.add('like')
+    likeBtn.classList.remove('unlike')
+
+    const quoteToRemove = quotesArray.find(quote => quote.id === id)
+    const indexToRemove = quotesArray.indexOf(quoteToRemove);
+    quotesArray.splice(indexToRemove, 1);
+
+    localStorage.setItem('favoriteQuotes', JSON.stringify(quotesArray));
+  }
+});
