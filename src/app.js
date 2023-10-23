@@ -59,7 +59,8 @@ likeBtn.addEventListener('click', () => {
 
     const newQuote = {
       id: id,
-      text: quote.innerHTML
+      text: quote.innerHTML,
+      author: author.innerHTML
     }
 
     quotesArray.push(newQuote)
@@ -77,3 +78,57 @@ likeBtn.addEventListener('click', () => {
     localStorage.setItem('favoriteQuotes', JSON.stringify(quotesArray));
   }
 });
+
+const favoriteBtn = document.querySelector('.favorite')
+favoriteBtn.addEventListener('click', () => {
+  handleClick()
+})
+
+const handleClick = () => {
+  favoriteBtn.classList = 'favorite opened'
+  const container = document.querySelector('.container')
+  const favoriteBox = document.createElement('div')
+  favoriteBox.className = 'favorite-box'
+  container.appendChild(favoriteBox)
+
+  const h4 = document.createElement('h4')
+  h4.innerHTML = 'Favorite Quote'
+
+  const ol = document.createElement('ol')
+  ol.classList.add('ol')
+  for (let i = 0; i < quotesArray.length; i++){
+    const li = document.createElement('li')
+    const textQuote = quotesArray[i].text
+    const authorQuote = quotesArray[i].author
+    li.innerHTML = `"${textQuote}"` + ' ---' + authorQuote
+    ol.appendChild(li)
+  }
+
+  const divBtn = document.createElement('div')
+  divBtn.className = 'favorite-box__btn'
+
+  const btn__close = document.createElement('button')
+  btn__close.innerHTML = 'Close'
+  btn__close.className = 'closeBtn'
+  btn__close.addEventListener('click', () =>{
+    favoriteBtn.classList.remove('opened')
+    favoriteBox.remove()
+  })
+
+  const btn__clearAll = document.createElement('button')
+  btn__clearAll.innerHTML = 'Clear All'
+  btn__clearAll.className = 'clearAllBtn'
+  btn__clearAll.addEventListener('click', () =>{
+    localStorage.removeItem('favoriteQuotes')
+  })
+
+
+  divBtn.appendChild(btn__close)
+  divBtn.appendChild(btn__clearAll)
+
+  favoriteBox.appendChild(h4)
+  favoriteBox.appendChild(ol)
+  favoriteBox.appendChild(divBtn)
+}
+
+
