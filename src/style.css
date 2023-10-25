@@ -8,7 +8,7 @@
 }
 
 body {
-    background-image: url('/assets/background.jpg');
+    background-image: url('../assets/background.jpg');
     
     
     background-size: cover;
@@ -140,7 +140,7 @@ button.opened{
 ol{
     overflow-y: scroll;
     height: 200px;
-    padding: 15px;
+    padding: 24px;
     list-style-type: decimal;
     margin-bottom: 19px;
 }

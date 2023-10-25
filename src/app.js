@@ -4,7 +4,8 @@ const author = document.getElementById('author');
 const newQuoteBtn = document.querySelector('.newQuote')
 
 newQuoteBtn.addEventListener('click', () => {
-    getQuote(api_url)    
+    getQuote(api_url)  
+
     copyBtn.innerHTML = "Copy"
     copyBtn.classList.remove('copied')
 
@@ -19,8 +20,6 @@ function getQuote(url){
 
     newQuoteBtn.classList.add('loading')
     newQuoteBtn.innerHTML = "loading Quote..."
-
-    let keyId = 0;
 
     fetch(url).then((res) => res.json()).then(data => {
         quote.innerHTML = data.content
@@ -48,6 +47,11 @@ copyBtn.addEventListener('click', () =>{
     copyBtn.innerHTML = 'Copied'
 })
 
+const favoriteBtn = document.querySelector('.favorite')
+favoriteBtn.addEventListener('click', () => {
+  openFavoriteBlock()
+})
+
 const likeBtn = document.querySelector('.like');
 let quotesArray = JSON.parse(localStorage.getItem('favoriteQuotes')) || []
 let id = quotesArray.length
@@ -66,6 +70,20 @@ likeBtn.addEventListener('click', () => {
     quotesArray.push(newQuote)
     id++
     localStorage.setItem('favoriteQuotes', JSON.stringify(quotesArray))
+
+    
+    for (let i = 0; i < quotesArray.length; i++) {
+      if (favoriteBtn.classList.contains('opened')){
+        if (i === quotesArray.length - 1){
+          const ol = document.querySelector('ol')
+          const li = document.createElement('li')
+          const textQuote = quotesArray[i].text
+          const authorQuote = quotesArray[i].author
+          li.innerHTML = `"${textQuote}"` + ' ---' + authorQuote
+          ol.appendChild(li)
+        }
+      }
+    }
   } else {
     likeBtn.innerHTML = 'Like'
     likeBtn.classList.add('like')
@@ -75,16 +93,17 @@ likeBtn.addEventListener('click', () => {
     const indexToRemove = quotesArray.indexOf(quoteToRemove);
     quotesArray.splice(indexToRemove, 1);
 
+    if (favoriteBtn.classList.contains('opened')){
+      const ol = document.querySelector('ol')
+      const lastElement = ol.lastElementChild
+      ol.removeChild(lastElement)
+    }
+
     localStorage.setItem('favoriteQuotes', JSON.stringify(quotesArray));
   }
 });
 
-const favoriteBtn = document.querySelector('.favorite')
-favoriteBtn.addEventListener('click', () => {
-  handleClick()
-})
-
-const handleClick = () => {
+const openFavoriteBlock = () => {
   favoriteBtn.classList = 'favorite opened'
   const container = document.querySelector('.container')
   const favoriteBox = document.createElement('div')
@@ -96,8 +115,9 @@ const handleClick = () => {
 
   const ol = document.createElement('ol')
   ol.classList.add('ol')
+  let li
   for (let i = 0; i < quotesArray.length; i++){
-    const li = document.createElement('li')
+    li = document.createElement('li')
     const textQuote = quotesArray[i].text
     const authorQuote = quotesArray[i].author
     li.innerHTML = `"${textQuote}"` + ' ---' + authorQuote
@@ -119,9 +139,13 @@ const handleClick = () => {
   btn__clearAll.innerHTML = 'Clear All'
   btn__clearAll.className = 'clearAllBtn'
   btn__clearAll.addEventListener('click', () =>{
+    for (let i = 0; i < quotesArray.length; i++) {
+      const liElement = document.querySelector('li')
+      liElement.remove()
+    }
+    quotesArray.splice(0)
     localStorage.removeItem('favoriteQuotes')
   })
-
 
   divBtn.appendChild(btn__close)
   divBtn.appendChild(btn__clearAll)
@@ -129,6 +153,7 @@ const handleClick = () => {
   favoriteBox.appendChild(h4)
   favoriteBox.appendChild(ol)
   favoriteBox.appendChild(divBtn)
+
 }
 
 
